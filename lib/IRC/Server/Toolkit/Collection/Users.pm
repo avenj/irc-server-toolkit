@@ -1,5 +1,8 @@
 package IRC::Server::Toolkit::Collection::Users;
-use Defaults::Modern;
+use Defaults::Modern
+  -with_types => [
+    'IRC::Server::Toolkit::Types'
+  ];
 
 use IRC::Toolkit::Masks;
 
@@ -10,9 +13,7 @@ use Moo; use MooX::late;
 has casemap => (
   required => 1,
   is       => 'ro',
-  isa      => sub {
-    # FIXME validate casemap (IRC::Toolkit::Types?)
-  },
+  isa      => ValidCaseMap,
 );
 
 with 'IRC::Toolkit::Role::CaseMap';
@@ -85,7 +86,7 @@ method matching_host (Str $mask) {
   my $matches = array;
   $self->_users->values->visit(
     sub { $matches->push($_) if matches_mask( $mask, $_->host, $cmap ) }
-  )
+  );
   $matches->has_any ? $matches : ()
 }
 
@@ -94,7 +95,7 @@ method matching_user (Str $mask) {
   my $matches = array;
   $self->_users->values->visit(
     sub { $matches->push($_) if matches_mask( $mask, $_->user, $cmap ) }
-  )
+  );
   $matches->has_any ? $matches : ()
 }
 
@@ -103,7 +104,7 @@ method matching_full (Str $mask) {
   my $matches = array;
   $self->_users->values->visit(
     sub { $matches->push($_) if matches_mask( $mask, $_->full, $cmap ) }
-  )
+  );
   $matches->has_any ? $matches : ()
 }
 
