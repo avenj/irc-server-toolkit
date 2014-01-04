@@ -75,4 +75,40 @@ method del_channel ($channel) { $self->_chans->delete($channel) }
 method list_channels { $self->_chans->keys->all }
 
 
+has _modes => (
+  lazy    => 1,
+  is      => 'ro',
+  isa     => HashObj,
+  coerce  => 1,
+  writer  => '_set_modes',
+  builder => sub { hash },
+);
+
+method set_mode (
+  # FIXME
+) {
+  # FIXME need a sane API, figure it out in tests
+}
+
+
+has _flags => (
+  lazy      => 1,
+  is        => 'ro',
+  isa       => HashObj,
+  builder   => sub { hash },
+);
+
+method list_flags { $self->_flags->keys->all }
+method add_flags (@flags) { $self->_flags->set(map {; $_ => 1 } @flags) }
+method del_flags (@flags) { $self->_flags->delete(@flags) }
+method has_flags (@flags) {
+  my @res;
+  for (@flags) {
+    push @res, $_ if $self->_flags->exists($_)
+  }
+  @res
+}
+
+
+
 1;

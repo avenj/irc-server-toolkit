@@ -5,6 +5,45 @@ use IRC::Toolkit;
 use IRC::Server::Toolkit;
 
 
+my $users = IRC::Server::Toolkit::Collection::Users->new(
+  casemap => 'rfc1459',
+);
+
+my $avenj = IRC::Server::Toolkit::User->new(
+    nick => 'avenj',
+    user => 'silentj',
+    host => 'eris.oppresses.us',
+);
+$users->add_user($avenj);
+
+$users->add_users(
+  IRC::Server::Toolkit::User->new(
+    nick   => 'Snarf',
+    user   => 'bobby',
+    host   => 'blackcobalt.net',
+    server => 'irc.cobaltirc.org',
+  ),
+
+  IRC::Server::Toolkit::User->new(
+    nick   => 'Roger',
+    user   => 'fred',
+    host   => 'foo.example.org',
+    server => 'irc.blackcobalt.net',
+  ),
+);
+
+my @userlist = $users->as_list;
+ok @userlist == 3, '3 users added ok';
+
+my @nicklist = $users->nickname_list;
+ok @nicklist == 3, '3 nicks returned';
+is_deeply
+  [ sort @nicklist ],
+  [ qw/avenj Roger Snarf/ ],
+  'nick list looks ok';
+
+
+
 ##  IRC::Server::Toolkit
 ##    ::User
 #       - stringifies to nick
