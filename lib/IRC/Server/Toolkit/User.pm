@@ -85,9 +85,31 @@ has _modes => (
 );
 
 method set_mode (
-  # FIXME
+  InstanceOf['IRC::Mode::Set'] $modes
 ) {
-  # FIXME need a sane API, figure it out in tests
+  # FIXME still needs some cute mode validation bits
+  # and a way to feed IRC::Mode::Set from Collection::Users perhaps
+  my @changed;
+  MSET: while (my $mset = $modes->next) {
+    my ($flag, $mode, $param) = @$mset;
+    if ($flag eq '+') {
+      $param //= 1;
+      my $extant = $self->_modes->get($mode);
+      next MSET if defined $extant and $extant eq $param;
+      $self->_modes->set($mode => $param);
+      push @changed, [ $flag, $mode, $param ]
+    } elsif ($flag eq '-') {
+      my $extant = $self->_modes->get($mode);
+      if (defined $extant) {
+        push @changed, [ $flag, $mode, $extant ];
+        $self->_modes->delete($mode)
+      }
+    } else {
+      confess "Unknown mode flag '$flag'"
+    }
+  }
+  $modes->reset;
+  array(@changed)
 }
 
 
