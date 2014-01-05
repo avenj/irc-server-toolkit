@@ -1,4 +1,4 @@
-package IRC::Server::Toolkit::Collection;
+package IRC::Server::Toolkit::State;
 use Defaults::Modern;
 use Module::Runtime 'use_module';
 
