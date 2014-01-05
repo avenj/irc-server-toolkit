@@ -56,7 +56,8 @@ method add_users (@users) {
 method del_users (@users) {
   my @deleted;
   for my $user (@users) {
-    my $nick = blessed $user ? $self->lower( $user->nick ) : $user;
+    my $nick = blessed $user ? 
+      $self->lower( $user->nick ) : $self->lower( $user )
     push @deleted, $nick if $self->_users->delete($nick)
   }
   @deleted
@@ -65,7 +66,7 @@ method del_users (@users) {
 
 method as_list  { $self->_users->values->all }
 method as_array { $self->_users->values }
-method nickname_list { map {; $_->nick } $self->_users->values->all }
+method nickname_list  { map {; $_->nick } $self->_users->values->all }
 method nickname_array { $self->_users->values->map(sub { $_->nick }) }
 
 method by_name (Str $nick) { $self->_users->get( $self->lower($nick) ) }
@@ -108,6 +109,10 @@ method matching_full (Str $mask) {
   $matches->has_any ? $matches : ()
 }
 
+method grep (CodeRef $sub) {
+  $self->_users->values->grep($sub)
+}
+
 
 1;
 
@@ -119,7 +124,12 @@ IRC::Server::Toolkit::Collection::Users - A set of User objects
 
 =head1 SYNOPSIS
 
+FIXME
+
 =head1 DESCRIPTION
+
+A collection of L</user_class> type objects and useful methods to manipulate
+them.
 
 =head2 Attributes
 
@@ -184,6 +194,13 @@ Retrieves a L</user_class> object from the collection by name (or returns
 undef).
 
 =for Pod::Coverage by_nick
+
+=head3 grep
+
+  my @matched = $users->grep(sub { $_->server eq 'services.int' })->all;
+
+Returns a L<List::Objects::WithUtils::Array> containing user objects for which
+the given coderef evaluated boolean true.
 
 =head3 matching_nick
 
