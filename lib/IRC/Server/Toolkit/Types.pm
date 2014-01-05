@@ -7,6 +7,7 @@ use Type::Utils       -all;
 use Types::Standard   -types;
 use Types::TypeTiny   ();
 
+use List::Objects::Types -types;
 
 use IRC::Mode::Set;
 use IRC::Mode::Single;
