@@ -11,9 +11,9 @@ use Module::Runtime 'use_module';
 use Moo; use MooX::late;
 
 has casemap => (
-  required => 1,
   is       => 'ro',
   isa      => ValidCaseMap,
+  builder  => sub { 'rfc1459' },
 );
 
 with 'IRC::Toolkit::Role::CaseMap';
@@ -123,7 +123,88 @@ IRC::Server::Toolkit::Collection::Users - A set of User objects
 
 =head2 Attributes
 
+=head3 casemap
+
+The IRC casemap that should be used to normalize identifiers; see
+L<IRC::Toolkit::Case> for details.
+
+Defaults to C<rfc1459>.
+
+=head3 user_class
+
+The class name that should be used to create & validate User objects.
+
+Defaults to L<IRC::Server::Toolkit::User>.
+
 =head2 Methods
+
+=head3 create_and_add
+
+Creates a new instance of the current L</user_class> and adds it to
+the collection.
+
+Parameters are passed to the L</user_class> constructor.
+
+=head3 add_users
+
+Takes a list of L</user_class> type objects and adds them to the collection.
+
+=for Pod::Coverage add_user
+
+=head3 del_users
+
+Takes a list of L</user_class> type objects or (normalized) nicknames and
+attempts to delete them from the collection.
+
+Returns the list of deleted nicknames.
+
+=for Pod::Coverage del_user
+
+=head3 as_list
+
+Returns the current list of L</user_class> type objects.
+
+=head3 as_array
+
+Returns the current list of L</user_class> type objects as a
+L<List::Objects::WithUtils::Array>.
+
+=head3 nickname_list
+
+Returns the current list of (actual, not normalized) nicknames.
+
+=head3 nickname_array
+
+Returns the current list of (actual, not normalized) nicknames as a
+L<List::Objects::WithUtils::Array>.
+
+=head3 by_name
+
+Retrieves a L</user_class> object from the collection by name (or returns
+undef).
+
+=for Pod::Coverage by_nick
+
+=head3 matching_nick
+
+Takes an IRC glob-type mask; returns a L<List::Objects::WithUtils::Array>
+containing user objects whose B<nick> matches the given mask.
+
+=head3 matching_host
+
+Takes an IRC glob-type mask; returns a L<List::Objects::WithUtils::Array>
+containing user objects whose B<host> matches the given mask.
+
+=head3 matching_user
+
+Takes an IRC glob-type mask; returns a L<List::Objects::WithUtils::Array>
+containing user objects whose B<user> matches the given mask.
+
+=head3 matching_full
+
+Takes an IRC glob-type mask; returns a L<List::Objects::WithUtils::Array>
+containing user objects whose B<full> attribute (C<< 'nick!user@host' >>)
+matches the given mask.
 
 =head1 AUTHOR
 
