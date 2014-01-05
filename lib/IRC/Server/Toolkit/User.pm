@@ -8,7 +8,7 @@ use Defaults::Modern
 use Moo; use MooX::late;
 use overload
   bool     => sub { 1 },
-  '""'     => 'nick',
+  '""'     => sub { shift->nick },
   fallback => 1;
 
 
