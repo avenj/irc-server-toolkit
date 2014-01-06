@@ -34,6 +34,8 @@ declare StateObject =>
 declare UserObject =>
   as InstanceOf['IRC::Server::Toolkit::User'];
 
+declare TopicObject =>
+  as InstanceOf['IRC::Server::Toolkit::Channel::Topic'];
   
 declare ChannelCollection =>
   as InstanceOf['IRC::Server::Toolkit::Collection::Channels'];
