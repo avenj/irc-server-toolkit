@@ -34,8 +34,10 @@ has topic => (
   predicate => 'has_topic',
 );
 
+# FIXME figure out modes interfaces/storage
 
 has _users => (
+  # FIXME sane api for storing user status modes
   lazy      => 1,
   is        => 'ro',
   isa       => HashObj,
