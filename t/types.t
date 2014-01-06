@@ -20,6 +20,9 @@ should_fail [],               ValidCaseMap;
 # UserObject
 # FIXME
 
+# TopicObject
+# FIXME
+
 # ChannelCollection
 # FIXME
 
