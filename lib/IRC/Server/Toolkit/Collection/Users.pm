@@ -12,7 +12,8 @@ use Moo; use MooX::late;
 
 has casemap => (
   is       => 'ro',
-  isa      => ValidCaseMap,
+  isa      => ValidCaseMapObject,
+  coerce   => 1,
   builder  => sub { 'rfc1459' },
 );
 
