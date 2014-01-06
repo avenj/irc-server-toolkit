@@ -15,14 +15,20 @@ cmp_ok $users->casemap, 'eq', 'rfc1459',
 cmp_ok $users->user_class, 'eq', 'IRC::Server::Toolkit::User',
   'user_class ok';
 
+# create_and_add
+my $added = $users->create_and_add(
+  nick => 'avenj',
+  user => 'avenj',
+  host => 'eris.oppresses.us'
+);
+cmp_ok $added->nick, 'eq', 'avenj',
+  'create_and_add returned user obj';
+
+# count
+cmp_ok $users->count, '==', 1, '1 user in collection';
+
 # add_user(s)
 ok $users->add_users(
-  IRC::Server::Toolkit::User->new(
-    nick    => 'avenj',
-    user    => 'avenj',
-    host    => 'eris.oppresses.us',
-  ),
-
   IRC::Server::Toolkit::User->new(
     nick    => 'UC235',
     user    => 'thor',
@@ -113,10 +119,17 @@ is_deeply
   'matching_full ok';
 
 # grep
+$matches = $users->grep(sub { $_->nick =~ /a/ });
+is_deeply
+  [ $matches->map(sub { "$_" })->sort_by(sub { lc })->all ],
+  [ 'avenj', 'Diziara' ],
+  'grep ok';
 
-# nick normalization
+# nick normalization / non-standard casemaps
+# FIXME
 
 # exceptions
+# FIXME
 
 
 done_testing

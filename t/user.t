@@ -67,9 +67,7 @@ is_deeply
 # exceptions
 eval {; IRC::Server::Toolkit::User->new };
 ok $@, 'missing required init args dies';
-# FIXME mode-related exceptions
-#   unknown mode flag
-#   bad args to set_mode
+
 # FIXME channel-related exceptions
 #   bad args to add_channel
 

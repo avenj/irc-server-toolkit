@@ -12,14 +12,19 @@ should_fail 'foo',            ValidCaseMap;
 should_fail [],               ValidCaseMap;
 
 # ChannelObject
+# FIXME
 
 # StateObject
+# FIXME
 
 # UserObject
+# FIXME
 
 # ChannelCollection
+# FIXME
 
 # UserCollection
+# FIXME
 
 # ModeSet
 use IRC::Mode::Set;

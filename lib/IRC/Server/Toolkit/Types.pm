@@ -1,6 +1,5 @@
 package IRC::Server::Toolkit::Types;
 use strict; use warnings FATAL => 'all';
-use v5.14;
 
 use Type::Library     -base;
 use Type::Utils       -all;
