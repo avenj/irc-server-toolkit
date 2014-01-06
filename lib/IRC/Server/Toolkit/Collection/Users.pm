@@ -36,7 +36,9 @@ has user_class => (
 );
 
 method create_and_add (@params) {
-  $self->add_users( $self->user_class->new(@params) )
+  my $obj = $self->user_class->new(@params);
+  $self->add_users($obj);
+  $obj
 }
 
 method add_users (@users) {
@@ -57,8 +59,11 @@ method del_users (@users) {
   my @deleted;
   for my $user (@users) {
     my $nick = blessed $user ? 
-      $self->lower( $user->nick ) : $self->lower( $user )
-    push @deleted, $nick if $self->_users->delete($nick)
+      $self->lower( $user->nick ) : $self->lower( $user );
+    if (my $obj = $self->_users->get($nick)) {
+      $self->_users->delete($nick);
+      push @deleted, $obj
+    }
   }
   @deleted
 }
@@ -163,10 +168,10 @@ Takes a list of L</user_class> type objects and adds them to the collection.
 
 =head3 del_users
 
-Takes a list of L</user_class> type objects or (normalized) nicknames and
+Takes a list of L</user_class> type objects or nicknames and
 attempts to delete them from the collection.
 
-Returns the list of deleted nicknames.
+Returns the list of deleted objects.
 
 =for Pod::Coverage del_user
 
