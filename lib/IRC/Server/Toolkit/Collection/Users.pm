@@ -69,6 +69,7 @@ method del_users (@users) {
 }
 { no warnings 'once'; *del_user = *del_users }
 
+method count    { $self->_users->keys->count }
 method as_list  { $self->_users->values->all }
 method as_array { $self->_users->values }
 method nickname_list  { map {; $_->nick } $self->_users->values->all }
@@ -174,6 +175,10 @@ attempts to delete them from the collection.
 Returns the list of deleted objects.
 
 =for Pod::Coverage del_user
+
+=head3 count
+
+Returns the number of users currently in the collection.
 
 =head3 as_list
 
