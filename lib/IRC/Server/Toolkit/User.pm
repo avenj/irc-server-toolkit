@@ -117,20 +117,24 @@ method set_mode (
   my @changed;
   MSET: while (my $mset = $modes->next) {
     my ($flag, $mode, $param) = @$mset;
-    if ($flag eq '+') {
-      $param //= -1;
-      my $extant = $self->modes->get($mode);
-      next MSET if defined $extant and $extant eq $param;
-      $self->modes->set($mode => $param);
-      push @changed, [ $flag, $mode, $param ]
-    } elsif ($flag eq '-') {
-      my $extant = $self->modes->get($mode);
-      if (defined $extant) {
-        push @changed, [ $flag, $mode, $extant ];
-        $self->modes->delete($mode)
+    sswitch ($flag) {
+      case '+': {
+        $param //= -1;
+        my $extant = $self->modes->get($mode);
+        next MSET if defined $extant and $extant eq $param;
+        $self->modes->set($mode => $param);
+        push @changed, [ $flag, $mode, $param ]
       }
-    } else {
-      confess "Unknown mode flag '$flag'"
+
+      case '-': {
+        my $extant = $self->modes->get($mode);
+        if (defined $extant) {
+          push @changed, [ $flag, $mode, $extant ];
+          $self->modes->delete($mode)
+        }
+      }
+    
+      default: { confess "Unknown mode flag '$flag'" }
     }
   }
   $modes->reset;
@@ -156,6 +160,8 @@ method has_flags (@flags) {
   }
   @res
 }
+
+1;
 
 
 =pod
@@ -289,5 +295,3 @@ Jon Portnoy <avenj@cobaltirc.org>
 
 =cut
 
-
-1;

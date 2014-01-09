@@ -15,11 +15,8 @@ sub import {
   my @failed;
   for my $mod (@load) {
     my $ld = "package $pkg; use IRC::Server::Toolkit::$mod";
-    eval $ld;
-    if ($@) {
-      carp $@;
-      push @failed, $mod
-    }
+    local $@;
+    eval $ld and not $@ or carp $@ and push @failed, $mod;
   }
   confess "Failed to import ".join ' ', @failed if @failed;
   1

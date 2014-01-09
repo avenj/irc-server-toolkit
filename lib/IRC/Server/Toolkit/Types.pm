@@ -19,9 +19,10 @@ declare ValidCaseMap =>
   },
   inline_as {
     my ($constraint, $cmap) = @_;
-    $constraint->parent->inline_check($cmap) . qq{
-      && ($cmap eq 'rfc1459' || $cmap eq 'ascii' || $cmap eq 'strict-rfc1459')
-    }
+    $constraint->parent->inline_check($cmap) . 
+    qq[ && ($cmap eq 'rfc1459' ]             .
+    qq[ || $cmap eq 'ascii' ]                .
+    qq[ || $cmap eq 'strict-rfc1459') ]
   };
 
 
