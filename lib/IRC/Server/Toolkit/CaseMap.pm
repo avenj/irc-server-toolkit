@@ -1,4 +1,4 @@
-package IRC::Server::Toolkit::CaseMaps;
+package IRC::Server::Toolkit::CaseMap;
 use Defaults::Modern
   -with_types => [
     'IRC::Server::Toolkit::Types'
@@ -15,8 +15,8 @@ method as_string { $$self }
 our %CaseMaps;
 
 method new ($class: ValidCaseMap $cmap) {
-  exists $CaseMaps{$cmap} ? $CaseMaps{$cmap}
-    : $CaseMaps{$cmap} = IRC::Server::Toolkit::_CMAP->new($cmap)
+  return $CaseMaps{$cmap} if exists $CaseMaps{$cmap};
+  $CaseMaps{$cmap} = __PACKAGE__->_new($cmap)
 }
 
 1;

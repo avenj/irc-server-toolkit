@@ -4,6 +4,8 @@ use Defaults::Modern
     'IRC::Server::Toolkit::Types'
   ];
 
+use IRC::Server::Toolkit::CaseMap;
+
 use Module::Runtime 'use_module';
 
 use Moo; use MooX::late;
@@ -17,6 +19,22 @@ has name => (
   is        => 'ro',
   isa       => Str,
 );
+
+# Channel casemap defaults to rfc1459, which should do for most ...
+# if we have something else specified, save some memory by coercing
+# to a CaseMap obj (these are cached):
+has _casemap => (
+  init_arg  => 'casemap',
+  lazy      => 1,
+  is        => 'ro',
+  isa       => ValidCaseMapObject,
+  predicate => 'has_casemap',
+  coerce    => 1,
+  builder   => sub { 'rfc1459' }
+);
+method casemap { $self->has_casemap ? $self->_casemap : 'rfc1459' }
+with 'IRC::Toolkit::Role::CaseMap';
+
 
 has ts  => (
   is        => 'ro',
