@@ -34,7 +34,7 @@ has _casemap => (
 );
 method casemap { $self->has_casemap ? $self->_casemap : 'rfc1459' }
 with 'IRC::Toolkit::Role::CaseMap';
-
+# FIXME list objects need same logic, factor out to role?
 
 has ts  => (
   is        => 'ro',
@@ -74,14 +74,18 @@ has _lists => (
   builder   => sub {
     my ($self) = @_;
     my $lists = hash;
-    $self->list_classes->kv->visit(
-      sub {
-        my ($list, $class) = @$_;
-        $lists->set(
-          lc($list) => use_module($class)->new 
+    my $casemap;
+    if ($self->has_casemap && $self->casemap ne 'rfc1459') {
+      $casemap = $self->casemap
+    }
+    $self->list_classes->kv->visit(sub {
+      my ($list, $class) = @$_;
+      $lists->set(
+        lc($list) => use_module($class)->new(
+          maybe casemap => $casemap,
         )
-      }
-    );
+      )
+    });
   },
 );
 
