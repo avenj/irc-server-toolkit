@@ -16,8 +16,7 @@ with 'IRC::Server::Toolkit::Role::CaseMappedList';
 
 around add => sub {
   my ($orig, $self, %bans) = @_;
-  for my $mask (keys %bans) {
-    my $meta = $bans{$mask};
+  while (my ($mask, $meta) = each %bans) {
     confess 'Expected an ARRAY containing setter and optional TS'
       unless ref $meta
       and reftype $meta eq 'ARRAY'
@@ -39,7 +38,7 @@ around get_slice => sub {
 };
 
 
-method host_is_banned (Defined $host) {
+method is_banned (Defined $host) {
   $self->keys_matching_host($host)->has_any
 }
 
