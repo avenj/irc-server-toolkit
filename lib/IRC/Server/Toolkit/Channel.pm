@@ -71,6 +71,7 @@ has _lists => (
       my ($list, $class) = @$_;
       $lists->set(
         lc($list) => use_module($class)->new(
+          # FIXME lists need to consume CaseMap/DefaultCaseMap also
           maybe casemap => $casemap,
         )
       )
