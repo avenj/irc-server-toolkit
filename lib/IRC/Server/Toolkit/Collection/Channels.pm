@@ -9,8 +9,11 @@ use Module::Runtime 'use_module';
 use Moo; use MooX::late;
 
 has casemap => (
+  lazy      => 1,
   is        => 'ro',
-  isa       => ValidCaseMap,
+  isa       => ValidCaseMapObject,
+  coerce    => 1,
+  predicate => 'has_casemap',
   builder   => sub { 'rfc1459' },
 );
 with 'IRC::Toolkit::Role::CaseMap';
@@ -30,6 +33,11 @@ has channel_class => (
   isa       => Str,
   builder   => sub { use_module('IRC::Server::Toolkit::Channel') },
 );
+
+method create_and_add (@params) {
+  # FIXME build and add a Channel
+  # FIXME if self->has_casemap and casemap ne rfc1459, Channel needs it too
+}
 
 
 method add_channels (@channels) {
