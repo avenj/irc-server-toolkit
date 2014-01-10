@@ -12,29 +12,18 @@ use Moo; use MooX::late;
 use overload
   bool => sub { 1 },
   '""' => sub { shift->name },
-  fallback => 1,
+  fallback => 1;
+
+
+with 'IRC::Server::Toolkit::Role::DefaultCaseMap';
+with 'IRC::Toolkit::Role::CaseMap';
+
 
 has name => (
   required  => 1,
   is        => 'ro',
   isa       => Str,
 );
-
-# Channel casemap defaults to rfc1459, which should do for most ...
-# if we have something else specified, save some memory by coercing
-# to a CaseMap obj (these are cached):
-has _casemap => (
-  init_arg  => 'casemap',
-  lazy      => 1,
-  is        => 'ro',
-  isa       => ValidCaseMapObject,
-  predicate => 'has_casemap',
-  coerce    => 1,
-  builder   => sub { 'rfc1459' }
-);
-method casemap { $self->has_casemap ? $self->_casemap : 'rfc1459' }
-with 'IRC::Toolkit::Role::CaseMap';
-# FIXME list objects need same logic, factor out to role?
 
 has ts  => (
   is        => 'ro',
