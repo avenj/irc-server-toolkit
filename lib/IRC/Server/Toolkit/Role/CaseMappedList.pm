@@ -39,6 +39,10 @@ method get_slice (@keys)  { $self->_list->sliced(@keys) }
 
 method keys { $self->_list->keys }
 
+method values { $self->_list->values }
+
+method kv { $self->_list->kv }
+
 method keys_matching_regex (RegexpRef $re) { 
   $self->_list->keys->grep(sub { $_ =~ $re })
 }
