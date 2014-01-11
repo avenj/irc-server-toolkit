@@ -34,20 +34,31 @@ has channel_class => (
   builder   => sub { use_module('IRC::Server::Toolkit::Channel') },
 );
 
-method create_and_add (@params) {
-  # FIXME build and add a Channel
-  # FIXME if self->has_casemap and casemap ne rfc1459, Channel needs it too
+method create_and_add (@arg) {
+  my %params = @arg ? @arg == 1 ? %{ $arg[0] } : @arg : ();
+  if ($self->has_casemap && $self->casemap ne 'rfc1459') {
+    $params{casemap} = $self->casemap
+  }
+  $self->add_channels(
+    $self->channel_class->new(%params)
+  )
 }
-
 
 method add_channels (@channels) {
   my $chan_class = $self->channel_class;
   for my $chan (@channels) {
     confess "Expected an instance of $chan_class but got $chan"
       unless blessed $chan and $chan->isa($chan_class);
+
     my $cname = $self->lower( $chan->name );
     confess "Attempted to add previously extant channel $cname"
       if $self->_chans->exists($cname);
+
+    unless ((my $cmap = $chan->casemap) eq (my $orig = $self->casemap)) {
+      carp "casemap mismatch: channel '$cname' mapped '$cmap' - ",
+           "collection is '$orig'";
+    }
+
     $self->_chans->set($cname => $chan)
   }
   $self
