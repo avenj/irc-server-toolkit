@@ -33,18 +33,25 @@ coerce ValidCaseMapObject =>
   from ValidCaseMap() =>
     via { use_module('IRC::Server::Toolkit::CaseMap')->new($_) };
 
+
 declare ChannelObject =>
   as InstanceOf['IRC::Server::Toolkit::Channel'];
+
+declare ChannelListObject =>
+  as ConsumerOf['IRC::Server::Toolkit::Role::CaseMappedList'];
+
+declare TopicObject =>
+  as InstanceOf['IRC::Server::Toolkit::Channel::Topic'];
+ 
 
 declare StateObject =>
   as InstanceOf['IRC::Server::Toolkit::State'];
 
+
 declare UserObject =>
   as InstanceOf['IRC::Server::Toolkit::User'];
+ 
 
-declare TopicObject =>
-  as InstanceOf['IRC::Server::Toolkit::Channel::Topic'];
-  
 declare ChannelCollection =>
   as InstanceOf['IRC::Server::Toolkit::Collection::Channels'];
 
