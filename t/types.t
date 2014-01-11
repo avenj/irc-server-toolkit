@@ -11,6 +11,10 @@ should_pass 'strict-rfc1459', ValidCaseMap;
 should_fail 'foo',            ValidCaseMap;
 should_fail [],               ValidCaseMap;
 
+# ValidCaseMapObject
+# FIXME
+# FIXME coercion tests
+
 # ChannelObject
 # FIXME
 

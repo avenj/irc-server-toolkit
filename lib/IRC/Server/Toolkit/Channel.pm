@@ -4,13 +4,20 @@ use Defaults::Modern
     'IRC::Server::Toolkit::Types'
   ];
 
+use IRC::Server::Toolkit::CaseMap;
+
 use Module::Runtime 'use_module';
 
 use Moo; use MooX::late;
 use overload
   bool => sub { 1 },
   '""' => sub { shift->name },
-  fallback => 1,
+  fallback => 1;
+
+
+with 'IRC::Server::Toolkit::Role::DefaultCaseMap';
+with 'IRC::Toolkit::Role::CaseMap';
+
 
 has name => (
   required  => 1,
@@ -56,14 +63,19 @@ has _lists => (
   builder   => sub {
     my ($self) = @_;
     my $lists = hash;
-    $self->list_classes->kv->visit(
-      sub {
-        my ($list, $class) = @$_;
-        $lists->set(
-          lc($list) => use_module($class)->new 
+    my $casemap;
+    if ($self->has_casemap && $self->casemap ne 'rfc1459') {
+      $casemap = $self->casemap
+    }
+    $self->list_classes->kv->visit(sub {
+      my ($list, $class) = @$_;
+      $lists->set(
+        lc($list) => use_module($class)->new(
+          # FIXME lists need to consume CaseMap/DefaultCaseMap also
+          maybe casemap => $casemap,
         )
-      }
-    );
+      )
+    });
   },
 );
 

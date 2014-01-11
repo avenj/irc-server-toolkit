@@ -8,9 +8,10 @@ use Types::TypeTiny   ();
 
 use List::Objects::Types -types;
 
+use Module::Runtime 'use_module';
+
 use IRC::Mode::Set;
 use IRC::Mode::Single;
-
 
 declare ValidCaseMap =>
   as Str(),
@@ -25,19 +26,32 @@ declare ValidCaseMap =>
     qq[ || $cmap eq 'strict-rfc1459') ]
   };
 
+declare ValidCaseMapObject =>
+  as InstanceOf['IRC::Server::Toolkit::CaseMap'];
+
+coerce ValidCaseMapObject =>
+  from ValidCaseMap() =>
+    via { use_module('IRC::Server::Toolkit::CaseMap')->new($_) };
+
 
 declare ChannelObject =>
   as InstanceOf['IRC::Server::Toolkit::Channel'];
 
-declare StateObject =>
-  as InstanceOf['IRC::Server::Toolkit::State'];
-
-declare UserObject =>
-  as InstanceOf['IRC::Server::Toolkit::User'];
+declare ChannelListObject =>
+  as ConsumerOf['IRC::Server::Toolkit::Role::CaseMappedList'];
 
 declare TopicObject =>
   as InstanceOf['IRC::Server::Toolkit::Channel::Topic'];
-  
+ 
+
+declare StateObject =>
+  as InstanceOf['IRC::Server::Toolkit::State'];
+
+
+declare UserObject =>
+  as InstanceOf['IRC::Server::Toolkit::User'];
+ 
+
 declare ChannelCollection =>
   as InstanceOf['IRC::Server::Toolkit::Collection::Channels'];
 
