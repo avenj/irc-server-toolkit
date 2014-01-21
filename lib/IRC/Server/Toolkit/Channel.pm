@@ -44,7 +44,16 @@ has topic => (
 # FIXME figure out modes interfaces/storage
 
 has _users => (
+  # FIXME weakened User objs and their channel-related meta
+  #  need add_user like User's add_channel
   # FIXME sane api for storing user status modes
+  #  should probably be able to create objs containing status modes
+  #  and their matching prefixes, then keep refs to those objs around
+  #  same for other modes?
+  #  take a gander at Toolkit::ISupport, figure it out from there
+  #  possibly we can borrow the existing ISupport structs
+  #  -> blocking on IRC::Toolkit::Modes change in git
+  # also figure out wtf I was doing in i-s-pluggable
   lazy      => 1,
   is        => 'ro',
   isa       => HashObj,
@@ -52,6 +61,22 @@ has _users => (
   predicate => '_has_users',
   builder   => sub { hash },
 );
+
+method add_user (
+  UserObject $channel
+) {
+  ...
+}
+
+method del_user ($channel) {
+  ...
+}
+
+method list_user_names { $self->_users->keys->all }
+method list_user_objects { 
+  ... 
+}
+
 
 has _lists => (
   lazy      => 1,
@@ -71,7 +96,6 @@ has _lists => (
       my ($list, $class) = @$_;
       $lists->set(
         lc($list) => use_module($class)->new(
-          # FIXME lists need to consume CaseMap/DefaultCaseMap also
           maybe casemap => $casemap,
         )
       )
@@ -88,6 +112,26 @@ method list_classes {
     /
   );
   $classes
+}
+
+method has_list (Str $list) { $self->_lists->exists(lc $list) }
+
+method host_is_banned ($host) {
+  unless ($self->has_list('bans')) {
+    carp "host_is_banned called but no 'Bans' list available";
+    return
+  }
+  my $blist = $self->_lists->get('bans');
+  $blist->is_banned($host)
+}
+
+method nick_is_invited ($nick) {
+  unless ($self->has_list('invites')) {
+    carp "nick_is_invited called but no 'Invites' list available";
+    return
+  }
+  my $invlist = $self->_lists->get('invites');
+  $invlist->is_invited($nick)
 }
 
 1;
