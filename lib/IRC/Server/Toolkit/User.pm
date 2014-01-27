@@ -87,13 +87,13 @@ has _chans => (
 method add_channel (
   ChannelObject $channel
 ) {
-  $self->_chans->set( $self->lower($channel) => $channel );
+  $self->_chans->set( $channel => $channel );
   Scalar::Util::weaken($self->_chans->{$channel});
   $self
 }
 
 method del_channel ($channel) { 
-  $self->_chans->delete( $self->lower($channel) )->has_any
+  $self->_chans->delete($channel)->has_any
 }
 
 method list_channel_names { $self->_chans->keys->all }
