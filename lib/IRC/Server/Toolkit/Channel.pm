@@ -5,6 +5,7 @@ use Defaults::Modern
   ];
 
 use IRC::Server::Toolkit::CaseMap;
+use IRC::Server::Toolkit::Channel::PresentUser;
 
 use Module::Runtime 'use_module';
 
@@ -41,7 +42,10 @@ has topic => (
   predicate => 'has_topic',
 );
 
+has _modes => (
 # FIXME figure out modes interfaces/storage
+);
+
 
 has _users => (
   # FIXME weakened User objs and their channel-related meta
@@ -63,18 +67,24 @@ has _users => (
 );
 
 method add_user (
-  UserObject $channel
+  UserObject     $user,
+  (Num | Undef)  $ts
 ) {
-  ...
+  my $obj = IRC::Server::Toolkit::Channel::PresentUser->new(
+    user     => $user,
+    maybe ts => $ts,
+  );
+  $self->_users->set( $self->lower($user) => $obj );
+  $obj
 }
 
-method del_user ($channel) {
-  ...
+method del_user ($user) {
+  $self->_users->delete( $self->lower($user) )->has_any
 }
 
 method list_user_names { $self->_users->keys->all }
 method list_user_objects { 
-  ... 
+  $self->_values->map(sub { $_->user // () })->all
 }
 
 
