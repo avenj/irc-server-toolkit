@@ -1,0 +1,24 @@
+## User
+- a way to validate modes?
+  may be outside the scope of this module
+- POD synopsis
+- tests
+
+## Channel
+- Mode handling, list dispatch (map modes to lists?),
+  user status modes
+- POD
+- tests
+
+
+## Collections
+
+# Users
+- proxied methods?
+- POD SYNOPSIS
+- tests
+
+# Channels
+- proxied methods?
+- POD
+- tests

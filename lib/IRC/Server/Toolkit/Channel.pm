@@ -48,8 +48,6 @@ has _modes => (
 
 
 has _users => (
-  # FIXME weakened User objs and their channel-related meta
-  #  need add_user like User's add_channel
   # FIXME sane api for storing user status modes
   #  should probably be able to create objs containing status modes
   #  and their matching prefixes, then keep refs to those objs around
